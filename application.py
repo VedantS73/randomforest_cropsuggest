@@ -26,9 +26,21 @@ def predict():
     rainfall = request.form.get('rainfall')
 
     input_query = np.array([[N,P,K,temperature,humidity,ph,rainfall]])
-    result = model.predict(input_query)[0]
+    # result = model.predict(input_query)[0]
 
-    return jsonify({'crop':str(result)})
+    N = 4  # Change this to the desired number of top suggestions
+    predicted_probabilities = model.predict_proba(input_query)
+    top_n_indices = np.argsort(-predicted_probabilities, axis=1)[:, :N]
+    top_n_crops = [[model.classes_[index] for index in indices] for indices in top_n_indices]
+
+    predic_list = []
+
+    for i, crops in enumerate(top_n_crops):
+        predic_list = crops
+
+    print(predic_list)
+
+    return jsonify({'crop':predic_list})
 
 @app.route('/curr_weather',methods=['GET'])
 def curr_weather():
@@ -69,5 +81,3 @@ def open_browser():
 if __name__ == "__main__":
     Timer(1, open_browser).start()
     app.run(port=2000)
-
-# flask --app ml_backend run
