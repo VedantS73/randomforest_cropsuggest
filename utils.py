@@ -54,7 +54,9 @@ def get_weather_by_lat_lon(lat, lon):
     return jsonify(weather_data)
 
 def get_weather_by_polygon(points):
-    lat, lon = points[0]
+    print(points)
+    first_pt = points[0]
+    lat, lon = first_pt['lat'], first_pt['lon']
     return get_weather_by_lat_lon(lat, lon)
 
 def get_7_day_forecast(lat, lon):

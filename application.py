@@ -51,11 +51,13 @@ def curr_weathere():
     data = request.json
 
     if 'lat' in data and 'lon' in data:
+        print("lat lon")
         lat = data['lat']
         lon = data['lon']
         weather_data = get_weather_by_lat_lon(lat, lon)
         return weather_data
     elif 'points' in data:
+        print("polygon")
         points = data['points']
         weather_data = get_weather_by_polygon(points)
         return weather_data
