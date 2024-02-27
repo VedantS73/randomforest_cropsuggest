@@ -3,6 +3,7 @@ import numpy as np
 import webbrowser
 from threading import Timer
 import pickle
+from utils import getweather, get_weather_by_lat_lon, get_weather_by_polygon, get_7_day_forecast
 
 model = pickle.load(open('RandomForest69.pkl','rb'))
 print(1)
@@ -29,6 +30,36 @@ def predict():
 
     return jsonify({'crop':str(result)})
 
+@app.route('/curr_weather',methods=['GET'])
+def curr_weather():
+    return getweather()
+
+@app.route('/curr_loc_data',methods=['POST'])
+def curr_weathere():
+    data = request.json
+
+    if 'lat' in data and 'lon' in data:
+        lat = data['lat']
+        lon = data['lon']
+        weather_data = get_weather_by_lat_lon(lat, lon)
+        return weather_data
+    elif 'points' in data:
+        points = data['points']
+        weather_data = get_weather_by_polygon(points)
+        return weather_data
+    else:
+        return jsonify({'error': 'Invalid parameters'})
+
+@app.route('/seven_day_forecast',methods=['POST'])
+def seven_day():
+    data = request.json
+
+    lat = data['lat']
+    lon = data['lon']
+    weather_data = get_7_day_forecast(lat, lon)
+    return weather_data
+
+    
 if __name__ == '__app__':
     app.run(debug=True)
 
