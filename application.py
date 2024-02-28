@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import numpy as np
 import webbrowser
 from threading import Timer
@@ -9,6 +10,8 @@ model = pickle.load(open('RandomForest69.pkl','rb'))
 print(1)
 
 app = Flask(__name__)
+
+CORS(app)
 
 @app.route('/')
 def index():
@@ -48,10 +51,11 @@ def curr_weather():
 
 @app.route('/curr_loc_data',methods=['POST'])
 def curr_weathere():
+    print("hello server recieved a request")
+    print(request.json)
     data = request.json
 
     if 'lat' in data and 'lon' in data:
-        print("lat lon")
         lat = data['lat']
         lon = data['lon']
         weather_data = get_weather_by_lat_lon(lat, lon)
@@ -66,7 +70,10 @@ def curr_weathere():
 
 @app.route('/seven_day_forecast',methods=['POST'])
 def seven_day():
+    print("hello thus is moeeeee moeeee")
     data = request.json
+    data = data['pointreq']
+    print("data is: ",data)
 
     lat = data['lat']
     lon = data['lon']
